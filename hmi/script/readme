@@ -1,0 +1,14 @@
+# To enable hmi_server launch on startup, run following commands:
+
+sudo cp hmi_server.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+
+sudo systemctl enable hmi_server
+
+# verify successful configuration by running:
+
+sudo systemctl start hmi_server
+
+# or simple reboot to test
+sudo reboot

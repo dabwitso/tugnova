@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="battery_meter" type="battery_meter" name="battery_meter" output="screen"/>
+
+</launch>

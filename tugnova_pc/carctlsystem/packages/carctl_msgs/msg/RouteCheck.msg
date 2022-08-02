@@ -1,0 +1,2 @@
+uint16 RouteCheckFlg
+uint16 WaypointId

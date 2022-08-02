@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="monitoring_health" name="check_plc" type="check_plc" > </node>
+  <node pkg="monitoring_health" name="phone_notification" type="phone_notification.py"  output="screen" > </node>
+</launch>

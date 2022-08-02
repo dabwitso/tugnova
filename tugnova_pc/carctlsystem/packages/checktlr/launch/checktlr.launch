@@ -1,0 +1,11 @@
+<!-- -->
+<launch>
+
+  <arg name="PauseTime" default="3" />
+
+  <node pkg="checktlr" type="checktlr" name="checktlr" output="screen">
+    <param name="PauseTime" value="$(arg PauseTime)" />
+
+  </node>
+
+</launch>

@@ -1,0 +1,12 @@
+[Unit]
+Description=HMI server systemd service.
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ubuntu/
+User=ubuntu
+ExecStart=/bin/bash /home/ubuntu/hmi_server/ros/script/autorun_hmi_server.sh
+Environment="PYTHONPATH=$PYTHONPATH:/home/ubuntu/.local/lib/python3.8/site-packages"
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,58 @@
+post:
+   url : http://localhost:8080/v/status
+   timeout : 1
+   max_times : 3
+   waittime : 3.0
+   mode: auto-driving
+nodecheck:
+   timer: 5
+   count: 3
+   node_name:
+      - /base_link_to_localizer
+      - /can_odometry
+      - /can_status_translator
+      - /change_config_waypoint_follower
+      - /changeobstaclearea
+      - /check_change_route
+      - /checksrv
+      - /checktlr
+      - /lane_rule
+      - /lane_select
+      - /lane_stop
+      - /lost_localization
+      - /ndt_matching
+      - /ctlreduce
+      - /ctlvehicle
+      - /direct_stop
+      - /generate_vehicle_twist
+      - /ndt_matching_monitor
+      - /plc_converter
+      - /plc_receiver
+      - /plc_sender
+      - /points_map_loader
+      - /pose_relay
+      - /pure_pursuit
+      - /ray_ground_filter
+      - /rosout
+      - /twist_filter
+      - /twist_gate
+      - /update_map_route
+      - /vel_pose_diff_checker
+      - /vel_relay
+      - /velocity_set
+      - /voxel_grid_filter
+      - /waypoint_loader
+      - /waypoint_marker_publisher
+      - /waypoint_replanner
+      - /world_to_map
+      - /generate_can
+      - /astar_avoid
+      - /phone_notification
+      - /vehicle_waypoint_distance_checker
+      - /back_blocker
+      - /os_cloud_node
+      - /os_node
+      - /emergency_stop
+      - /check_plc
+      - /ping_node_checker
+      - /monitoring_notification

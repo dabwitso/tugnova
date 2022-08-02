@@ -1,0 +1,11 @@
+<launch>
+
+	<arg name = "distance" default = "1.0" />
+
+	<node pkg="vehicle_waypoint_distance_checker" type="vehicle_waypoint_distance_checker" name="vehicle_waypoint_distance_checker" output="screen">
+
+		<param name = "distance" value = "$(arg distance)"/>
+
+	</node>
+
+</launch>

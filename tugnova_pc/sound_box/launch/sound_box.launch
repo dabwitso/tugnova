@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="sound_box" name="sound_box" type="sound_box" output="screen"/>
+</launch>

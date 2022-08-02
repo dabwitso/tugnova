@@ -1,0 +1,15 @@
+int16 BrakePotVol
+int16 AccelPotVol
+int16 SteerPotVol
+float32 tire_angle_rad
+int16 BrakeMotorEnc
+int16 BrakePdlFrcVol
+int16 AccelPdlFrcVol
+int16 R_Tire
+int16 L_Tire
+int16 SW
+int16 Currentsensor50
+int16 Currentsensor5
+int16 BrakeMotorForce
+int16 AccelForce
+int16 SteerMotorForce

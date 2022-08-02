@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="traffic_lights" name="traffic_light_detector" type="traffic_light_detector" output="screen"/>
+</launch>

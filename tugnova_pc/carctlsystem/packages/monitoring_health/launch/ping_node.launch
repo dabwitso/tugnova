@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="monitoring_health" name="ping_node" type="ping_node.py" output="log" > </node>
+  <node pkg="monitoring_health" name="ping_node_checker" type="ping_node_checker.py" output="log" > </node>
+</launch>

@@ -1,0 +1,2 @@
+string status_message
+string current_state

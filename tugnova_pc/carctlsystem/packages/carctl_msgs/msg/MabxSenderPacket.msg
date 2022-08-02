@@ -1,0 +1,9 @@
+int16 auto_control
+int16 acc_cmode
+float32 acc_vel_ref
+float32 tir_ang_ref
+int16 winkerL
+int16 winkerR
+float32 tire_angle_rad
+float32 PLC_vel
+int16 wd_count

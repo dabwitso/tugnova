@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="node_start_delay" default="5.0"/>
+
+  <node pkg="communication" type="waypoint_job_handler" name="waypoint_job_handler" output="screen"/>
+  <node pkg="communication" type="tagnova_hmi_transfer" name="tagnova_hmi_transfer" output="screen"/>
+  <node pkg="communication" type="waypoint_selector" name="waypoint_selector" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@'" output="screen"/>
+
+</launch>

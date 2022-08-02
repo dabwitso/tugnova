@@ -1,0 +1,17 @@
+<launch>
+	<arg name = "mode" default = "battery" />
+	<arg name = "maximum_voltage" default = "100.0" />
+	<arg name = "scale_threshold" default = "10.0" />
+	<arg name = "scale_range" default = "10" />
+	<arg name = "timer" default = "10" />
+	<arg name = "initial_timer" default = "60" />
+
+	<node pkg="battery_converter" type="battery_converter" name="battery_converter" output="log">
+		<param name = "mode" value = "$(arg mode)"/>
+		<param name = "maximum_voltage" value = "$(arg maximum_voltage)"/>
+		<param name = "scale_threshold" value = "$(arg scale_threshold)"/>
+		<param name = "scale_range" value = "$(arg scale_range)"/>
+		<param name = "timer" value = "$(arg timer)"/>
+		<param name = "initial_timer" value = "$(arg initial_timer)"/>
+	</node>
+</launch>

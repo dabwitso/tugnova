@@ -1,0 +1,52 @@
+<launch>
+
+    <!-- 一般パラメータ(waypoint_editor.*) -->
+	<arg name = "output" default = "/home/nvidia/Autoware/work" />
+    <arg name = "name" default = "ROUTENAME" />
+	<arg name = "default_obstacle_detection_distance_change" default = "5.0" />
+    <arg name = "default_minimum_target_point_distance" default = "1.5" />
+    <arg name = "default_pause_time" default = "10.0" />
+    <arg name = "default_cargo_range" default = "1.0" />
+
+    <!-- 経路分割系パラメータ(waypoint_editor_change_route.*) -->
+    <arg name = "waypoint_distance" default = "0.5" />
+	<arg name = "lookahead_ratio" default = "2.0" />
+    
+    <!-- カーブ判定系パラメータ(waypoint_editor_curve.*) -->
+    <arg name = "default_velocity" default = "4.5" />
+	<arg name = "default_detection_range_front" default = "1.2" />
+    <arg name = "default_detection_range_rear" default = "1.2" />
+    <arg name = "curve_lookahead" default = "10" />
+	<arg name = "minimum_velocity" default = "2.7" />
+    <arg name = "minumum_detection_range" default = "0.36" />
+    <arg name = "enter_curve_threshold_rad" default = "0.35" />
+    <arg name = "exit_curve_threshold_rad" default = "0.05" />
+    <arg name = "window_size" default = "5" />
+    <arg name = "steps" default = "3" />
+
+	<node pkg="waypoint_editor" type="waypoint_editor" name="waypoint_editor" output="screen">
+
+		<param name = "output" value = "$(arg output)"/>
+        <param name = "name" value = "$(arg name)"/>
+		<param name = "default_obstacle_detection_distance_change" value = "$(arg default_obstacle_detection_distance_change)"/>
+        <param name = "default_minimum_target_point_distance" value = "$(arg default_minimum_target_point_distance)"/>
+        <param name = "default_pause_time" value = "$(arg default_pause_time)"/>
+        <param name = "default_cargo_range" value = "$(arg default_cargo_range)"/>
+
+        <param name = "waypoint_distance" value = "$(arg waypoint_distance)"/>
+        <param name = "lookahead_ratio" value = "$(arg lookahead_ratio)"/>
+
+        <param name = "default_velocity" value = "$(arg default_velocity)"/>
+        <param name = "default_detection_range_front" value = "$(arg default_detection_range_front)"/>
+        <param name = "default_detection_range_rear" value = "$(arg default_detection_range_rear)"/>
+        <param name = "curve_lookahead" value = "$(arg curve_lookahead)"/>
+        <param name = "minimum_velocity" value = "$(arg minimum_velocity)"/>
+        <param name = "minumum_detection_range" value = "$(arg minumum_detection_range)"/>
+        <param name = "enter_curve_threshold_rad" value = "$(arg enter_curve_threshold_rad)"/>
+        <param name = "exit_curve_threshold_rad" value = "$(arg exit_curve_threshold_rad)"/>
+        <param name = "window_size" value = "$(arg window_size)"/>
+        <param name = "steps" value = "$(arg steps)"/>
+
+	</node>
+
+</launch>

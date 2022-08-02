@@ -1,0 +1,4 @@
+<launch>
+	<node pkg="battery_ctlvehicle" type="battery_ctlvehicle" name="battery_ctlvehicle" output="screen">
+	</node>
+</launch>

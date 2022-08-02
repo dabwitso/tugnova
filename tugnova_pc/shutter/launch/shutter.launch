@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="shutter" type="shutter_controller" name="shutter_controller" output="screen"/>
+
+</launch>

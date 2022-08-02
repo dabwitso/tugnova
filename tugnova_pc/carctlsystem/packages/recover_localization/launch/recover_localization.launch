@@ -1,0 +1,17 @@
+<launch>
+
+	<arg name = "buffer_size" default = "1000" />
+	<arg name = "window_size" default = "5" />
+    <arg name = "threshold" default = "1.0" />
+	<arg name = "mode" default = "odometry" />
+
+	<node pkg="recover_localization" type="recover_localization" name="recover_localization" output="screen">
+
+		<param name = "buffer_size" value = "$(arg buffer_size)"/>
+		<param name = "window_size" value = "$(arg window_size)"/>
+        <param name = "threshold" value = "$(arg threshold)"/>
+		<param name = "mode" value = "$(arg mode)"/>
+
+	</node>
+
+</launch>

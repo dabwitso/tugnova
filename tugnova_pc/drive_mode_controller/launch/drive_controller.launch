@@ -1,0 +1,5 @@
+<launch>
+
+  <node pkg="drive_mode_controller" type="drive_controller" name="drive_controller" output="screen"/>
+
+</launch>

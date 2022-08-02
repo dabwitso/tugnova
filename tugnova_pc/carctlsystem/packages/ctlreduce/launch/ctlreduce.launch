@@ -1,0 +1,17 @@
+<!-- -->
+<launch>
+
+  <arg name="process_SlowDown" default="0.3" />
+  <arg name="process_ReduceConst" default="254" />
+  <arg name="process_friction" default="0.008" />
+  <arg name="process_obssize" default="30" />
+
+  <node pkg="ctlreduce" type="ctlreduce" name="ctlreduce" output="screen">
+    <param name="process_SlowDown" value="$(arg process_SlowDown)" />
+    <param name="process_ReduceConst" value="$(arg process_ReduceConst)" />
+    <param name="process_friction" value="$(arg process_friction)" />
+    <param name="process_obssize" value="$(arg process_obssize)" />
+
+  </node>
+
+</launch>

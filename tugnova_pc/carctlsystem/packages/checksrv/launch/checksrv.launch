@@ -1,0 +1,30 @@
+<!-- -->
+<launch>
+
+  <arg name="post_url" default="http://192.168.1.200:5000/vms/control" />
+  <arg name="post_timeout" default="1" />
+  <arg name="post_force_timeout" default="10" />
+  <arg name="car_vehicleId" default="1" />
+  <arg name="car_Iface" default="wlp59s0" />
+  <arg name="process_rate" default="0.5" />
+  <arg name="process_wpoint_threshold" default="10" />
+  <arg name="process_loop_timer" default="0.01" />
+  <arg name="disconnect_time_threshold" default="60.0" />
+  <arg name="test_drive" default="0" />
+  
+
+  <node pkg="checksrv" type="checksrv" name="checksrv" output="log">
+    <param name="post_url" value="$(arg post_url)" />
+    <param name="post_timeout" value="$(arg post_timeout)" />
+    <param name="post_force_timeout" value="$(arg post_force_timeout)" />
+    <param name="car_vehicleId" value="$(arg car_vehicleId)" />
+    <param name="car_Iface" value="$(arg car_Iface)" />
+    <param name="process_rate" value="$(arg process_rate)" />
+    <param name="process_wpoint_threshold" value="$(arg process_wpoint_threshold)" />
+    <param name="process_loop_timer" value="$(arg process_loop_timer)" />
+    <param name="disconnect_time_threshold" value="$(arg disconnect_time_threshold)" />
+    <param name="test_drive" value="$(arg test_drive)" />
+
+  </node>
+
+</launch>

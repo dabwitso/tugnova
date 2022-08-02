@@ -1,0 +1,17 @@
+uint8 waypoint_id
+
+uint8 waiting_state
+
+float32 sdo
+float32 sds
+float32 dtr
+float32 dcr
+
+
+string data1
+
+string data2
+
+string data3
+
+TrafficLight_Result tlr

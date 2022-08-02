@@ -1,0 +1,2 @@
+string waitingFor
+string trafficLightState

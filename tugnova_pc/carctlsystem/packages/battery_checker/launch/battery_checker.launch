@@ -1,0 +1,9 @@
+<launch>
+	<arg name = "scale_range" default = "10" />
+	<arg name = "scale_failure" default = "2" />
+
+	<node pkg="battery_checker" type="battery_checker" name="battery_checker" output="screen">
+		<param name = "scale_range" value = "$(arg scale_range)"/>
+		<param name = "scale_failure" value = "$(arg scale_failure)"/>
+	</node>
+</launch>

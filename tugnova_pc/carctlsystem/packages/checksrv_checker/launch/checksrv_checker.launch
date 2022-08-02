@@ -1,0 +1,12 @@
+<!-- -->
+<launch>
+
+  <arg name="run_threshold" default="7.0" />
+  <arg name="waypoint_update_threshold" default="7.0" />
+  <node pkg="checksrv_checker" type="checksrv_checker" name="checksrv_checker" output="log">
+    <param name="run_threshold" value="$(arg run_threshold)" />
+    <param name="waypoint_update_threshold" value="$(arg waypoint_update_threshold)" />
+
+  </node>
+
+</launch>

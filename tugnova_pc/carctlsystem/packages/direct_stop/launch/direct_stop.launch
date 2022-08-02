@@ -1,0 +1,18 @@
+<!-- -->
+<launch>
+
+	<arg name = "input_twist_cmd_topic" default = "/twist_cmd" />
+	<arg name = "output_twist_cmd_topic" default = "/out_twist_cmd" />
+    <arg name = "error_flg_topic" default = "/error_flg" />
+    <arg name = "stop_flg_topic" default = "/stop_flg" />
+
+	<node pkg="direct_stop" type="direct_stop" name="direct_stop" output="screen">
+
+		<param name = "input_twist_cmd_topic" value = "$(arg input_twist_cmd_topic)"/>
+		<param name = "output_twist_cmd_topic" value = "$(arg output_twist_cmd_topic)"/>
+        <param name = "error_flg_topic" value = "$(arg error_flg_topic)"/>
+        <param name = "stop_flg_topic" value = "$(arg stop_flg_topic)"/>
+
+	</node>
+
+</launch>

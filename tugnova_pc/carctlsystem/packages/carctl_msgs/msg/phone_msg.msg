@@ -1,0 +1,2 @@
+string messageId
+string selfLocalization
