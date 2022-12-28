@@ -1,51 +1,116 @@
-#include <ros/ros.h>
-#include <tf/tf.h>
+#include "vehicle_waypoint_distance_checker.h"
 
-#include <autoware_msgs/LaneArray.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <autoware_msgs/RemoteCmd.h>
+vehicleDistanceCheck::vehicleDistanceCheck()
+    : private_nh("~")
+    , current_pose_x_(0.0)
+    , current_pose_y_(0.0)
+    , vehicle_waypoint_distance_(0.0)
+{
+    // ros param
+    private_nh.param<double>("distance", vehicle_waypoint_distance_, 1.0);
 
-ros::Publisher remote_cmd_pub;
-double current_waypoint_x = 0.0;
-double current_waypoint_y = 0.0;
-double distance = 1.0;
-
-/**
- * 近似のWaypointを得る.
- */
-void safetyWaypointsCallback(const autoware_msgs::Lane& msg) {
-    current_waypoint_x = msg.waypoints[0].pose.pose.position.x;
-    current_waypoint_y = msg.waypoints[0].pose.pose.position.y;
+    // ros handles
+    remote_cmd_pub_ = nh.advertise<autoware_msgs::RemoteCmd>("remote_cmd", 10);
+    vehicle_distance_pub_ = nh.advertise<vehicle_waypoint_distance_checker::PoseStruct>("vehicle_distance", 10);
+    safety_waypoint_sub_ = nh.subscribe("safety_waypoints", 10, &vehicleDistanceCheck::safetyWaypointCallback, this);
+    current_pose_sub_ = nh.subscribe("current_pose", 10, &vehicleDistanceCheck::currentPoseCallback, this);
 }
 
-/**
- * 自己位置とWaypointの距離を求め、得られた距離が閾値以上であった場合に脱線判定を流す.
- */
-void currentPoseCallback(const geometry_msgs::PoseStamped::ConstPtr& msg) {
-    tf::Vector3 v1(current_waypoint_x, current_waypoint_y, 0);
-    tf::Vector3 v2(msg->pose.position.x, msg->pose.position.y, 0);
+vehicleDistanceCheck::~vehicleDistanceCheck()
+{
+}
 
-    if (distance < tf::tfDistance(v1, v2)) {
+void vehicleDistanceCheck::safetyWaypointCallback(const autoware_msgs::LaneConstPtr& msg)
+{
+    if (safety_current_pose_.id != msg->waypoints[0].wpc.waypoint_id)
+    {
+        safety_previous_pose_.x = safety_current_pose_.x;
+        safety_previous_pose_.y = safety_current_pose_.y;
+        safety_previous_pose_.id = safety_current_pose_.id;
+    }
+
+    safety_current_pose_.x = msg->waypoints[0].pose.pose.position.x;
+    safety_current_pose_.y = msg->waypoints[0].pose.pose.position.y;
+    safety_current_pose_.id = msg->waypoints[0].wpc.waypoint_id;
+    vehicle_waypoint_distance_ = msg->waypoints[0].wpc.vehicle_waypoint_distance;
+}
+
+void vehicleDistanceCheck::currentPoseCallback(const geometry_msgs::PoseStampedConstPtr& msg)
+{
+    current_pose_x_ = msg->pose.position.x;
+    current_pose_y_ = msg->pose.position.y;
+}
+
+double vehicleDistanceCheck::verticalDistance(const double& current_pose_x, const double& current_pose_y)
+{
+    // safety_waypointを受け取れていない, previousが0 の場合は0で返す 
+    if ((safety_current_pose_.x == 0 && safety_current_pose_.y == 0) || 
+        (safety_previous_pose_.x == 0 && safety_previous_pose_.y == 0)) 
+    {
+        return 0.0;
+    }
+
+    // 傾き0のとき
+    if (safety_current_pose_.x == safety_previous_pose_.x)
+    {
+        return std::abs(current_pose_x - safety_previous_pose_.x);
+    }
+
+    if (safety_current_pose_.y == safety_previous_pose_.y)
+    {
+        return std::abs(current_pose_y - safety_previous_pose_.x);
+    }
+
+    double a = (safety_previous_pose_.y - safety_current_pose_.y) / (safety_previous_pose_.x - safety_current_pose_.x);
+    double b = -1.0;
+    double c = safety_current_pose_.y - a * safety_current_pose_.x;
+
+    vehicle_msg_.a = a;
+    vehicle_msg_.c = c;
+    vehicle_msg_.current.position.x = current_pose_x_;
+    vehicle_msg_.current.position.y = current_pose_y_;
+    // d = |a * x + b * y + c| / sqrt(a ^ 2 + b ^ 2)
+    return std::abs(a * current_pose_x + b * current_pose_y + c) / std::sqrt(a * a + 1);
+}
+
+void vehicleDistanceCheck::vehicleDistanceState()
+{
+    double d = verticalDistance(current_pose_x_, current_pose_y_);
+
+    vehicle_msg_.safety_current.position.x = safety_current_pose_.x; 
+    vehicle_msg_.safety_current.position.y = safety_current_pose_.y; 
+    vehicle_msg_.safety_current.id = safety_current_pose_.id; 
+    vehicle_msg_.safety_previous.position.x = safety_previous_pose_.x; 
+    vehicle_msg_.safety_previous.position.y = safety_previous_pose_.y; 
+    vehicle_msg_.safety_previous.id = safety_previous_pose_.id; 
+    vehicle_msg_.vehicle_distance = d;
+    vehicle_distance_pub_.publish(vehicle_msg_);
+
+    if (vehicle_waypoint_distance_ < d)
+    {
         autoware_msgs::RemoteCmd remote_cmd;
         remote_cmd.vehicle_cmd.emergency = true;
-        remote_cmd.control_mode = 3; // 経路外判定であることをlost_localizationへ伝える
-        remote_cmd_pub.publish(remote_cmd);
+        // 経路外判定であることをlost_localizationへ伝える
+        remote_cmd.control_mode = 3;
+        remote_cmd_pub_.publish(remote_cmd);
     }
 }
 
-int main(int argc, char** argv){
+void vehicleDistanceCheck::run()
+{
+    ros::Rate loop_rate(10);
+    while (ros::ok())
+    {
+        vehicleDistanceState();
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
+}
+
+int main(int argc, char** argv)
+{
     ros::init(argc, argv, "vehicle_waypoint_distance_checker");
-
-    ros::NodeHandle nh;
-    ros::NodeHandle private_nh("~");
-
-    private_nh.param<double>("distance", distance, 1.0);
-
-    ros::Subscriber safety_waypoints_sub = nh.subscribe("/safety_waypoints", 100, safetyWaypointsCallback);
-    ros::Subscriber current_pose_sub = nh.subscribe("/current_pose", 100, currentPoseCallback);
-    remote_cmd_pub = nh.advertise<autoware_msgs::RemoteCmd>("remote_cmd", 10);
-
-    ros::spin();
-
+    vehicleDistanceCheck vehicle_distance_check;
+    vehicle_distance_check.run();
     return 0;
 }

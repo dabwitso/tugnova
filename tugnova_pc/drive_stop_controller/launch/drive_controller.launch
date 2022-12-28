@@ -1,5 +1,0 @@
-<launch>
-
-  <node pkg="drive_stop_controller" type="drive_stop_controller" name="drive_stop_controller" output="screen"/>
-
-</launch>

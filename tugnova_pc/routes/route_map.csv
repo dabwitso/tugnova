@@ -1,0 +1,17 @@
+destination,route_link
+route_to_A,route1/route2/finish
+route_to_B,route3/route4/finish
+route_to_C,route4/route3/route1/finish
+route_to_D,route1/route2/finish
+route_to_1,route1/finish
+route_to_2,route2/finish
+route_to_21,route2-1/finish
+route_to_22,route2-2/finish
+route_to_23,route2-3/finish
+route_to_3,route3/finish
+route_to_4,route4/finish
+route_to_41,route4-1/finish
+route_to_42,route4-2/finish
+route_to_43,route4-3/finish
+route_to_test,test/finish
+crossroad_try,crossroad_try/finish

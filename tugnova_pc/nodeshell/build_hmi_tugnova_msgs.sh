@@ -1,47 +1,203 @@
 #!/bin/bash
+AUTOWARE_BASE_DIR=/home/nvidia/Autoware
+AUTOWARE_ROS_DIR=$AUTOWARE_BASE_DIR/ros
+GIT_DIR=/home/nvidia/gitlab
+IS_GITLOOP="true"
+REMOTE_GIT_REPO=https://tmc-droom-gitlab.com/kamigo/tugnova/hmi_tugnova_msgs.git
+REMOTE_CONNECT="n"
 
-BASE_DIR=/home/nvidia/Autoware
-ROS_DIR=${BASE_DIR}/ros
+cd $AUTOWARE_ROS_DIR
+
+# set this parameter if run within another script in order to skip some parts
+while getopts "s:h" opt;
+do
+  case ${opt} in
+    h)
+      echo "Usage: ./$0 [option...]"
+      echo " -h help"
+      echo " -s [optional arg: [slave] if this script is invoked within another script]"
+      exit 0
+      ;;
+    s)
+      IS_SLAVE_SCRIPT=${OPTARG};;
+    /?)
+      echo "Invalid option ${OPTARG}. Check usage below:"
+      ./build_hmi_tugnova_msgs.sh -h
+      exit 1
+      ;;
+  esac
+done
+
+# check if run within another script
+if [[ -z $IS_SLAVE_SCRIPT ]];
+then
+  echo -e "\nINFO: No argument passed. Default to standalone mode\n"
+  whiptail --title "REMOTE CONNECT" --yesno \
+    "Do You Want to Connect to Remote Git Repo?"\
+    0 0 --yes-button "Connect" --no-button "Decline"
+
+  if [ $? -eq 0 ];
+  then
+    REMOTE_CONNECT="y"
+  fi
+  IS_SLAVE_SCRIPT="standalone"
+else
+  IS_SLAVE_SCRIPT="slave"
+fi
+
+copy_files() {
+  if [ -d "$AUTOWARE_ROS_DIR/src/msgs/communication_msgs" ];
+  then
+    rm -r $AUTOWARE_ROS_DIR/src/msgs/communication_msgs
+  fi
+  cp -r $GIT_DIR/hmi_tugnova_msgs/communication_msgs $AUTOWARE_ROS_DIR/src/msgs/
+}
+
+reload_autoware() {
+  # Compile messages and re-launch Autoware
+  TERM=ansi whiptail --title "AUTOWARE MESSAGE COMPILE"\
+    --infobox "Starting to compile and build messages...\
+    \nWARNING: Closing Running Autoware Programs..." 8 40
+
+  sleep 5
+  clear
+
+  bash ${AUTOWARE_ROS_DIR}/nodeshell/ExitAutoware.sh
+
+  cd ${AUTOWARE_ROS_DIR}
+
+  source /opt/ros/kinetic/setup.bash
+
+  catkin_make --pkg communication_msgs
 
 
-SOURCE_DIR=/home/nvidia/gitlab/hmi_tugnova_msgs/communication_msgs
-DESTINATION_DIR=/home/nvidia/Autoware/ros/src/communication/packages
+  TERM=ansi whiptail --title "RELAUNCH" --infobox "Re-launching Autoware" 8 40
 
+  sleep 3
+  clear
 
-echo "
-cleaning folder ${DESTINATION_DIR}...
+  cd ${AUTOWARE_BASE_DIR}
 
-"
-rm -rf ${DESTINATION_DIR}/communication_msgs/
+  bash ${AUTOWARE_BASE_DIR}/api/run_apiserver_ui.sh
+}
 
-echo "
-loading route files from ${SOURCE_DIR} into ${DESTINATION_DIR} ...
+pull_remote_git() {
+  TERM=ansi whiptail --title "GIT CLONE INFO"\
+    --infobox "Attempting remote git clone..." 8 40
 
-"
-cp -r ${SOURCE_DIR} ${DESTINATION_DIR}/
+  sleep 3
+  clear
+  mkdir $GIT_DIR >&/dev/null
+  cd $GIT_DIR
+  # start git clone loop
+  while [ $IS_GITLOOP == "true" ]
+  do
+    if [[ $IS_SLAVE_SCRIPT == "slave" ]];
+    then
+      if [ ! -d "$GIT_DIR/hmi_tugnova_msgs" ];
+      then
+        git clone $REMOTE_GIT_REPO >&/dev/null && IS_GITLOOP="false" ||\
+          whiptail --title "ERROR" --yesno "Error: Git clone failed\
+          \nDo you want to retry?" 0 0 --yes-button "Retry" --no-button "Abort"
 
-read -t 5 -p "
+      else
+        TERM=ansi whiptail --title "GIT INFO"\
+          --infobox "$GIT_DIR/hmi_tugnova_msgs Folder Exists. Skipping git clone..."\
+          8 40
 
-Starting to compile and build messages
+        sleep 4
+        clear
+        IS_GITLOOP="false"
+      fi
+    else
+      git checkout -- . && git checkout master && git pull >&/dev/null && IS_GITLOOP="false" ||\
+        whiptail --title "ERROR" --yesno "Error: Git pull failed\
+        \nDo you want to retry?" 0 0 --yes-button "Retry" --no-button "Abort"
+    fi
 
-"
+    CLONESTATUS=$?
+    echo $CLONESTATUS
 
-./${ROS_DIR}/nodeshell/ExitAutoware.sh
+    if [ $IS_GITLOOP == "true" ];then
+      if [ $CLONESTATUS -eq 0 ];
+      then
+        TERM=ansi whiptail --title "GIT INFO"\
+          --infobox "Retrying remote git operation..." 8 40
 
-cd ${ROS_DIR}
+        sleep 3
+        clear
+      else
+        if [[ $IS_SLAVE_SCRIPT == "slave" ]];
+        then
+          TERM=ansi whiptail --title "ERROR"\
+            --infobox "Clone failed. Retry Declined By User.\
+            \n\nTerminating operation and exiting..." 10 40
 
-source /opt/ros/kinetic/setup.bash
-source ${ROS_DIR}/devel/setup.bash
+          sleep 5
+          clear
+          exit 1
+        else
+          TERM=ansi whiptail --title "ERROR"\
+            --infobox "Pull failed. Retry Declined By User.\
+            \n\nAborting remote pull request..." 10 40
 
-catkin_make --pkg communication_msgs
+          sleep 5
+          clear
+          IS_GITLOOP="false"
+        fi
+      fi
+    fi
+  done # end of git clone loop
 
-read -t 5 -p "
-Re-launching Autoware...
+}
 
-"
-cd ${BASE_DIR}
+if [ $IS_SLAVE_SCRIPT == "slave" ];
+then
+  pull_remote_git
+  copy_files
+  TERM=ansi whiptail --title "UPDATE STATUS"\
+    --infobox "Done updating hmi_tugnova_msgs files" 8 40
 
-./${BASE_DIR}/api/apiserve.sh start
+  sleep 3
+  clear
+else
+  if [ ! -d "$GIT_DIR/hmi_tugnova_msgs" ];
+  then
+    if [ $REMOTE_CONNECT != "y" ];
+    then
+      whiptail --title "WARNING" --yesno \
+        "WARNING: $GIT_DIR/hmi_tugnova_msgs folder not found.\
+        \nDo you want to attempt cloning from remote server?"\
+        --yes-button "Clone" --no-button "Abort" 0 0
 
+      USER_INPUT=$?
+      if [ $USER_INPUT -ne 0 ];
+      then
+        TERM=ansi whiptail --title "ABORT" --infobox \
+          "ERROR: Git local folder not found\nAborting message update..." 8 40
 
-echo "Completed"
+        sleep 5
+        clear
+        exit 1
+      fi
+    fi
+    IS_SLAVE_SCRIPT="slave"
+    pull_remote_git
+  else
+    if [ $REMOTE_CONNECT == "y" ];
+    then
+      cd $GIT_DIR/hmi_tugnova_msgs
+      git checkout -- .
+      git checkout master
+      git pull
+    fi
+  fi
+  copy_files
+
+  TERM=ansi whiptail --title "UPDATE STATUS" --infobox \
+    "Done updating hmi_tugnova_msgs files" 8 40
+
+  sleep 3
+  clear
+  reload_autoware
+fi

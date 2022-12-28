@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>object_detection_checker</name>
+  <version>0.0.0</version>
+  <description>The object_detection_checker package</description>
+
+  <maintainer email="freedom@todo.todo">freedom</maintainer>
+
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>autoware_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_export_depend>autoware_msgs</build_export_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <exec_depend>autoware_msgs</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+</package>

@@ -1,0 +1,6 @@
+vehicle_waypoint_distance_checker/Custom safety_current
+vehicle_waypoint_distance_checker/Custom safety_previous 
+geometry_msgs/Pose current
+float64 vehicle_distance
+float64 a
+float64 c

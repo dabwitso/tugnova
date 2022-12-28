@@ -1,0 +1,3 @@
+<launch>
+<node pkg="livox_detector" name="livox_detector" type="livox_detector" output="screen"/>
+</launch>

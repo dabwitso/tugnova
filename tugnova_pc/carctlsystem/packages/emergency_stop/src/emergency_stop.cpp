@@ -58,7 +58,9 @@ void emergencyErrorCallback(const carctl_msgs::emergency_status::ConstPtr& msg) 
 /** コマンド送信. */
 void sendCommand(ros::Publisher& pub) {
   if (error_list.empty()) {
-    pub.publish(RUN);
+    std_msgs::Int16 command;
+    command.data = RUN;
+    pub.publish(command);
     return;
   }
 
@@ -67,8 +69,9 @@ void sendCommand(ros::Publisher& pub) {
     return (data->getStatus() == 1/*= ERROR*/);
   });
 
-  int command = STOP;
-  if (target == error_list.end()) { command = RUN; }
+  std_msgs::Int16 command;
+  command.data = STOP;
+  if (target == error_list.end()) { command.data = RUN; }
   pub.publish(command);
 }
 

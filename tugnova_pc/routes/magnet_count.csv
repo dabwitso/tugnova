@@ -1,0 +1,8 @@
+route_id,stop_position,cart1,cart2,cart3,cart4,cart5
+route1,1,0,0,0,0,0
+route2-1,3,0,0,0,0,0
+route2-2,2,0,0,0,0,0
+route2-3,1,0,0,0,0,0
+route3,1,0,0,0,0,0
+route4-1,2,0,0,0,0,0
+route4-2,1,0,0,0,0,0

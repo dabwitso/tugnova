@@ -1,0 +1,145 @@
+lidar:
+  use_lidar: os1_32_gen2
+velodyne_lidar:
+  velodyne_frame_id: velodyne
+ouster_lidar:
+  sensor_hostname: os-992143000553.local
+  udp_dest: 192.168.0.37
+ouster_lidar_tf:
+  x: 0
+  y: 0
+  z: 0
+  yaw: 0
+  pitch: 0
+  roll: 0
+  frame_id: /velodyne
+  child_frame_id: /os_sensor
+  ms: 10
+livox_lidar:
+  multi_topic: 1
+livox_lidar_tf:
+  right_x: 0
+  right_y: 0.15
+  right_z: -0.21
+  right_yaw: 3.15
+  right_pitch: 0
+  right_roll: 0
+  right_frame_id: /velodyne
+  right_child_frame_id: /livox_frame1HDDGC500101891
+  right_ms: 10
+  left_x: 0
+  left_y: -0.15
+  left_z: -0.21
+  left_yaw: 3.15
+  left_pitch: 0
+  left_roll: 0
+  left_frame_id: /velodyne
+  left_child_frame_id: /livox_frame1HDDGC500101131
+  left_ms: 10
+ray_ground_filter:
+  remove_area_head: 1.5
+  remove_area_tail: 0.5
+  remove_area_right: 0.6
+  remove_area_left: 0.6
+generate_can:
+  use_plc: 1
+velocity_set:
+  detection_erea_head: 0 
+  detection_erea_tail: 0 
+  cargo_right: 0 
+  cargo_left: 0 
+  back_stop_search_distance: 0
+  pause_points_threshold: 10
+  PROCESS_WPOINT_THRESHOLD: 0
+ctlreduce:
+  process_SlowDown: 0.3
+  process_ReduceConst: 2
+  process_friction: 0.5
+  process_obssize: 15
+checksrv:
+  post_url: http://161.95.4.167:5000/vms/control
+  post_timeout: 1
+  post_force_timeout: 10
+  car_vehicleId: 6
+  car_Iface: wlp3s0
+  process_rate: 0.5
+  process_wpoint_threshold: 10
+  process_loop_timer: 0.01
+  disconnect_time_threshold: 2.0
+direct_stop:
+  input_twist_cmd_topic: /twistreduce_cmd
+  output_twist_cmd_topic: /out_twist_raw
+  error_flg_topic: /error_flg
+  stop_flg_topic: /stop_flg
+vel_pose_diff_checker:
+  loop_rate_hz: 10.0 
+  comparison_window_size_sec: 1.0 
+  topic_timeout_sec: 10000000.0 
+  moving_median_window_size_sec: 2.0
+  diff_position_median_threshold_meter: 2.0
+  enable_emergency_to_twist_gate: True
+plc_connector:
+  coms: yukuri
+  port_receive: 5001
+  port_send: 5002
+  destination: 192.168.0.10
+  use_low_pass_filter: True
+  use_median_filter: True
+  encoder_pulse_resolution: 145
+  twist_cmd_topic: /out_twist_cmd
+  waittime: 3
+  receive_error_threshold: 1.0
+recover_localization:
+  buffer_size: 1000
+  window_size: 5
+  threshold: 1.0
+  mode: ndt_pose
+ftp:
+  address: 161.95.4.167
+  user: ftp-user
+  password: TmcILS01
+readmap:
+  point_map_area: noupdate
+  divide_point_map_area: 3x3
+  point_map_pcp_files: /home/nvidia/Autoware/map/*
+vehicle_info:
+  info_path: /home/nvidia/Autoware/param/vehicle_info.yaml
+scan_respawn_point:
+  threshold: 9.5
+  distance: 1.0
+  angle: 0.4
+  position_check_timer: 5
+ctl_led:
+  led_ip: 192.168.0.100
+  led_port: 20160
+  auto_state_code: 'FA01'
+  stop_state_code: 'FA07'
+  error_state_code: 'FA06'
+  detection_state_code: 'FA05'
+  left_state_code: 'FA03'
+  right_state_code: 'FA02'
+  no_state_code: 'FA00'
+waypoint_editor:
+  output: /home/nvidia/Autoware/work
+  default_obstacle_detection_distance_change: 5.0
+  default_minimum_target_point_distance: 1.5
+  default_pause_time: 10.0
+  default_cargo_range: 1.0
+waypoint_editor_change_route:
+  waypoint_distance: 0.5
+  lookahead_ratio: 2.0
+waypoint_editor_curve:
+  default_velocity: 4.5
+  default_detection_range_front: 1.2
+  default_detection_range_rear: 1.2
+  curve_lookahead: 10
+  minimum_velocity: 2.7
+  minumum_detection_range: 0.36
+  enter_curve_threshold_rad: 0.35
+  exit_curve_threshold_rad: 0.05
+  window_size: 5
+  steps: 3
+back_blocker:
+  waypointid_lag_threshold: 1
+vehicle_waypoint_distance_checker:
+  distance: 5.0

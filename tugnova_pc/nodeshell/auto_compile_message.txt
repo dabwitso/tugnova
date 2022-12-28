@@ -1,0 +1,11 @@
+Compiling completed.
+
+Note: If compiling terminated due to errors,
+fix packages causing errors and run:
+
+
+  1. cd /home/nvidia/Autoware/ros
+
+  2. source /opt/ros/kinetic/setup.bash
+
+  3. catkin_make

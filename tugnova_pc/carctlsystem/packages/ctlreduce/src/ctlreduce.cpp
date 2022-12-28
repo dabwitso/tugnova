@@ -13,7 +13,7 @@
 double process_SlowDown = 0.3;
 double process_ReduceConst = 254;
 double process_friction = 0.008;
-int process_obssize = 30;
+int process_obssize = 30; // waypointいくつ分先まで、停止箇所（信号機、pause、stop等）があるかどうかを確認するか
 int16_t TlrReduceFlg = 0;
 int battery_status = BATTERY_OK;
 
@@ -29,8 +29,9 @@ int GetStopPoint()
   int Wait_state;
   int16_t tlrflg = TlrReduceFlg;
 
-  // Waypointの個数を取得。obssizeで指定した距離まで停止箇所を確認する
+  // safety_waypointトピックに格納されているWaypointの個数を取得。
   int max_obspoint = obs_wp.waypoints.size();
+  // obssizeで指定した距離まで停止箇所があるかどうかを確認する
   if (max_obspoint < process_obssize)
   {
     obssize = max_obspoint;
@@ -40,10 +41,9 @@ int GetStopPoint()
     obssize = process_obssize;
   }
 
-  //  直近の停止箇所もしくは信号のWaypointを取得 -> stop_point
-  //  PlcConverter::waypointCallbackで取得
-  //  obs_wp : safty_waypoint
-
+  // 取得したsafety_waypointのﾌﾗｸﾞから、
+  // 現在位置から何ポイント先に停止箇所があるのかを確認する。
+  // 返り値：i(何ポイント先に停止箇所があるのか)。停止箇所がなければ-1を返す。
   for (int i = 0; i < obssize; i++)
   {
     // 信号機赤もしくは一時停止箇所による減速要否（走行可能：1,停止:0) およびtlr.range：信号機 : 4（停止位置）
@@ -85,13 +85,14 @@ int GetStopPoint()
 }
 
 // 停止箇所までの距離(m)から車速を割り出す
-//  i : 停止ポイント
+//  引数　stopp : 停止ポイント。GetStopPoint()で取得。
 //  o : 車速(km/h)
 double GetTwistReduce(int stopp)
 {
   double stop_distance = 0.0;
 
-  // 停止箇所までの距離(m)を計測 -> stop_distance
+  // 停止箇所までの距離(m)を計算する
+  // 停止箇所から現在位置までのwaypointの間の距離を積算する -> stop_distance
   //  PlcConverter::waypointCallbackで取得
   for (int i = stopp; i > 0; i--)
   {
@@ -103,8 +104,11 @@ double GetTwistReduce(int stopp)
     stop_distance += tf::tfDistance(v1, v2);
   }
 
-  // 制動前の車速(km/h) = 平方根( 定数 × 摩擦係数 × 制動距離(m) ) / 3.6(kmph -> mps)
-  return std::sqrt(process_ReduceConst * process_friction * stop_distance) / 3.6;
+  // 減速させるための目標車速(m/s) = 平方根( 定数 × 摩擦係数 × 制動距離(m) ) / 3.6(kmph -> mps)
+  //return std::sqrt(process_ReduceConst * process_friction * stop_distance) / 3.6;
+  return std::sqrt(2*0.36*stop_distance);// wp=15 そこそこ急停止
+  //return std::pow(9*0.08*stop_distance*stop_distance/2, 1.0/3); // wp=15 ちょっとだけ急停止
+
 }
 
 void TwistCmdCallback(const geometry_msgs::TwistStamped &TwistStamped)
@@ -144,7 +148,7 @@ void TwistCmdCallback(const geometry_msgs::TwistStamped &TwistStamped)
   }
   else
   {
-    // 速度算出し、twistVel > preVel のとき減速する
+    // 減速する場合の目標速度を算出し、twistVel（元の目標速度） > preVel（減速目標速度） のとき減速する
     double preVel = GetTwistReduce(stop_point);
     if (twistVel > preVel)
     {
@@ -153,7 +157,7 @@ void TwistCmdCallback(const geometry_msgs::TwistStamped &TwistStamped)
       // 減速比率を計算
       double coefficient = preVel / twistVel;
       newtwist_.twist.linear.x = preVel;
-      // 減速比率を角速度に適用
+      // 減速比率を角速度に適用。減速度と同じ比率で角速度も調整する。
       newtwist_.twist.angular.z *= coefficient;
       pub_twistReduce.publish(newtwist_);
     }

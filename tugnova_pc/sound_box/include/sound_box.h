@@ -23,6 +23,7 @@ enum VoiceSounds {
     AUTO_CARGO_LOADING_FINISH_SOUND = 11,
     OFFLOAD_CARGO_REQUEST_SOUND = 12,
     ARRIVAL_SOUND = 13,
+    LIVOX_DETECTION_SOUND = 14,
   };
 class SoundBox {
   public:
@@ -33,7 +34,6 @@ class SoundBox {
 
   private:
   ros::NodeHandle nh;
-  ros::NodeHandle private_nh;
 
   ros::Publisher plc_packet_pub;
 
@@ -41,6 +41,7 @@ class SoundBox {
   ros::Subscriber plc_sensor_packet_sub;
   ros::Subscriber hmi_server_sub;
   ros::Subscriber waypoint_sub;
+  ros::Subscriber livox_sub;
 
   //int counter;
   //int failure_counter;
@@ -52,6 +53,7 @@ class SoundBox {
   int idle_counter;
 
   bool isCrossRoad;
+  bool isLivoxDetectionPt;
 
   static const int ON = 1;
   static const int OFF = 0;
@@ -60,6 +62,8 @@ class SoundBox {
   static const int PUBLISH_RATE = 100; //100Hz
   static const int ERROR_2DLIDAR_1 = 4;
   static const int ERROR_2DLIDAR_2 = 5;
+  static const int LIVOX_ON = 1;
+  static const int LIVOX_OFF = 2;
 
 
   // default tone sound flags
@@ -88,11 +92,15 @@ class SoundBox {
 
   VoiceSounds sound_type;
 
+  // methods
+  void cal_state();
+
+  // callbacks
   void plcConverterCallback(const udp_msgs::UdpControlPacket& msg);
   void plcSensorPacketCallback(const udp_msgs::UdpSensorPacket& msg);
   void hmiServerCallback(const std_msgs::Int16& msg);
   void waypointsCallback(const autoware_msgs::Lane& msg);
-  void cal_state();
+  void livoxCallback(const std_msgs::Int16& msg);
 };
 }
 

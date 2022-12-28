@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="monitor_ndt_stats" name="ndt_stat_health" type="ndt_stat_health" output="screen"/>
+</launch>

@@ -1,0 +1,271 @@
+{
+  "base_directory": "/home/nvidia/Autoware",
+  "shell_directory": "/home/nvidia/Autoware/ros/nodeshell",
+  "param_yaml": "/home/nvidia/Autoware/ros/src/util/packages/runtime_manager/scripts/param.yaml",
+  "custom_yaml": "/home/nvidia/Autoware/param/custom.yaml",
+  "runsystem_env": "/home/nvidia/Autoware/param/RunSystem.env",
+  "target": [
+    {
+      "node": "can_odometry",
+      "respawn_process": [
+        "gnome-terminal --command ${SHELL_DIR}/4can2odom.sh",
+        "sleep 10",
+        "gnome-terminal --command \"${SHELL_DIR}/16velposediffchecker.sh `python ${SHELL_DIR}/load_param.py  ${CUSTOM_YAML} vehicle_info info_path` `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} vel_pose_diff_checker`\""
+      ]
+    },
+    {
+      "node": "can_status_translator",
+      "respawn_process": [
+        "${SHELL_DIR}/7velposeconnect.sh      `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} vel_pose_connect`    > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "change_config_waypoint_follower",
+      "respawn_process": [
+        "${SHELL_DIR}/15change_config_waypoint_follower.sh            > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "changeobstaclearea",
+      "respawn_process": [
+        "gnome-terminal --command ${SHELL_DIR}/15changeobstaclearea.sh"
+      ]
+    },
+    {
+      "node": "check_change_route",
+      "respawn_process": [
+        "gnome-terminal --command ${SHELL_DIR}/15check_change_route.sh"
+      ]
+    },
+    {
+      "node": "checksrv",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/15servercheck.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} checksrv`\""
+      ]
+    },
+    {
+      "node": "checktlr",
+      "respawn_process": [
+        "gnome-terminal --command ${SHELL_DIR}/15checktlr.sh"
+      ]
+    },
+    {
+      "node": "lane_rule",
+      "respawn_process": [
+        "${SHELL_DIR}/9lanerule.sh          > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "lane_select",
+      "respawn_process": [
+        "${SHELL_DIR}/9laneselect.sh        > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "lane_stop",
+      "respawn_process": [
+        "${SHELL_DIR}/9lanestop.sh          > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "lost_localization",
+      "respawn_process": [
+        "gnome-terminal --command ${SHELL_DIR}/16lostlocalization.sh"
+      ]
+    },
+    {
+      "node": "ndt_matching",
+      "respawn_process": [
+        "${SHELL_DIR}/4ndtmatching.sh         `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} ndt_matching`         > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "ctlreduce",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/15ctlreduce.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} ctlreduce`\""
+      ]
+    },
+    {
+      "node": "ctlvehicle",
+      "respawn_process": [
+        "gnome-terminal --command ${SHELL_DIR}/15ctlvehicle.sh"
+      ]
+    },
+    {
+      "node": "direct_stop",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/15direct_stop.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} direct_stop`\""
+      ]
+    },
+    {
+      "node": "generate_vehicle_twist",
+      "respawn_process": [
+        "gnome-terminal --command ${SHELL_DIR}/16generatevehicletwist.sh",
+        "sleep 10",
+        "gnome-terminal --command \"${SHELL_DIR}/16velposediffchecker.sh `python ${SHELL_DIR}/load_param.py  ${CUSTOM_YAML} vehicle_info info_path` `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} vel_pose_diff_checker`\""
+      ]
+    },
+    {
+      "node": "generate_can",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/16generatecan.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} generate_can`\"",
+        "sleep 10",
+        "gnome-terminal --command ${SHELL_DIR}/4can2odom.sh",
+        "sleep 10",
+        "gnome-terminal --command \"${SHELL_DIR}/16velposediffchecker.sh `python ${SHELL_DIR}/load_param.py  ${CUSTOM_YAML} vehicle_info info_path` `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} vel_pose_diff_checker`\""
+      ]
+    },
+    {
+      "node": "ndt_matching_monitor",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/4ndtmatching_monitor.sh `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} ndt_matching_monitor`\""
+      ]
+    },
+    {
+      "node": "plc_converter",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/RunComsDriver.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} plc_connector`\""
+      ]
+    },
+    {
+      "node": "plc_receiver",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/RunComsDriver.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} plc_connector`\"",
+        "sleep 10",
+        "gnome-terminal --command ${SHELL_DIR}/4can2odom.sh",
+        "sleep 10",
+        "gnome-terminal --command \"${SHELL_DIR}/16velposediffchecker.sh `python ${SHELL_DIR}/load_param.py  ${CUSTOM_YAML} vehicle_info info_path` `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} vel_pose_diff_checker`\""
+      ]
+    },
+    {
+      "node": "plc_sender",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/RunComsDriver.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} plc_connector`\""
+      ]
+    },
+    {
+      "node": "points_concat_filter",
+      "respawn_process": [
+        "${SHELL_DIR}/3concatfilter.sh `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} points_concat_filter`     > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "pose_relay",
+      "respawn_process": [
+        "${SHELL_DIR}/7velposeconnect.sh      `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} vel_pose_connect`    > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "pure_pursuit",
+      "respawn_process": [
+        "${SHELL_DIR}/13purepursuit.sh             `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} pure_pursuit` > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "ray_ground_filter",
+      "respawn_process": [
+        "${SHELL_DIR}/5raygroundfilter.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} ray_ground_filter` `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} ray_ground_filter`  > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "twist_filter",
+      "respawn_process": [
+        "${SHELL_DIR}/14twistfilter.sh"
+      ]
+    },
+    {
+      "node": "twist_gate",
+      "respawn_process": [
+        "${SHELL_DIR}/14twistfilter.sh"
+      ]
+    },
+    {
+      "node": "update_map_route",
+      "respawn_process": [
+        "gnome-terminal --command ${SHELL_DIR}/15update_map_route.sh"
+      ]
+    },
+    {
+      "node": "vel_pose_diff_checker",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/16velposediffchecker.sh `python ${SHELL_DIR}/load_param.py  ${CUSTOM_YAML} vehicle_info info_path` `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} vel_pose_diff_checker`\""
+      ]
+    },
+    {
+      "node": "vel_relay",
+      "respawn_process": [
+        "${SHELL_DIR}/7velposeconnect.sh      `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} vel_pose_connect`    > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "velocity_set",
+      "respawn_process": [
+        "${SHELL_DIR}/11velocityset.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} velocity_set` `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} velocity_set` > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "velodyne_lidar",
+      "respawn_process": [
+        "${SHELL_DIR}/RunTwoLidar.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} velodyne_lidar`  > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "livox_lidar",
+      "respawn_process": [
+        "${SHELL_DIR}/RunLivox.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} livox_lidar`    > /dev/null 2>&1 &",
+        "${SHELL_DIR}/LivoxTF.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} livox_lidar_tf`    > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "ouster_lidar",
+      "respawn_process": [
+        "${SHELL_DIR}/RunOusterTF.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} ouster_lidar`    > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "voxel_grid_filter",
+      "respawn_process": [
+        "${SHELL_DIR}/3voxcelgridfilter.sh `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} voxel_grid_filter`  > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "waypoint_loader",
+      "respawn_process": [
+        "${SHELL_DIR}/12waypointloader.sh `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} waypoint_loader multi_lane_csv` > /dev/null 2>&1 &"
+      ]
+    },
+    {
+      "node": "recover_localization",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/18recover_localization.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} recover_localization`\""
+      ]
+    },
+    {
+      "node": "waypoint_saver",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/waypoint_saver.sh `python ${SHELL_DIR}/load_yaml.py ${PARAM_YAML} waypoint_saver save_filename`\""
+      ]
+    },
+    {
+      "node": "waypoint_editor",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/waypoint_editor.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} waypoint_editor` `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} waypoint_editor_change_route` `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} waypoint_editor_curve`\""
+      ]
+    },
+    {
+      "node": "vehicle_waypoint_distance_checker",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/vehicle_waypoint_distance_checker.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} vehicle_waypoint_distance_checker`\""
+      ]
+    },
+    {
+      "node": "back_blocker",
+      "respawn_process": [
+        "gnome-terminal --command \"${SHELL_DIR}/back_blocker.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} back_blocker`\"",
+        "xdotool windowsize $(xdotool search --onlyvisible --name firefox) 100% 100%",
+        "sleep 2",
+        "xdotool windowactivate $(xdotool search --onlyvisible --name firefox)"
+      ]
+    }
+  ]
+}

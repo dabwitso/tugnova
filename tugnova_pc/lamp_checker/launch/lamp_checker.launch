@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="lamp_checker" name="lamp_checker" type="lamp_checker" output="screen"/>
+</launch>

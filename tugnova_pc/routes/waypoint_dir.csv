@@ -1,0 +1,12 @@
+route_id,file_dir
+route1,/home/nvidia/Autoware/ROUTE/route1.csv
+route2,/home/nvidia/Autoware/ROUTE/route2.csv
+route3,/home/nvidia/Autoware/ROUTE/route3.csv
+route4,/home/nvidia/Autoware/ROUTE/route4.csv
+route2-1,/home/nvidia/Autoware/ROUTE/route2-1.csv
+route2-2,/home/nvidia/Autoware/ROUTE/route2-2.csv
+route2-3,/home/nvidia/Autoware/ROUTE/route2-3.csv
+route4-1,/home/nvidia/Autoware/ROUTE/route4-1.csv
+route4-2,/home/nvidia/Autoware/ROUTE/route4-2.csv
+test,/home/nvidia/Autoware/ROUTE/test.csv
+crossroad_try,/home/nvidia/Autoware/ROUTE/crossroad_try.csv

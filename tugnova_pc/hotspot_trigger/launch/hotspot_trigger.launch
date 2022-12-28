@@ -1,0 +1,3 @@
+<launch>
+<node pkg="hotspot_trigger" name="hotspot_trigger" type="hotspot_trigger" output="screen"/>
+</launch>

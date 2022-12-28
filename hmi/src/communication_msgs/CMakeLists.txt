@@ -18,6 +18,7 @@ add_message_files(
    RouteInfo.msg
    RouteResponse.msg
    Stats.msg
+   TugnovaGPS.msg
  )
 
 generate_messages(

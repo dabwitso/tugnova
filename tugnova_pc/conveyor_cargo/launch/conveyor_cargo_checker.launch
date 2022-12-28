@@ -1,0 +1,3 @@
+<launch>
+<node pkg="conveyor_cargo" name="conveyor_cargo_checker" type="conveyor_cargo_checker" output="screen"/>
+</launch>

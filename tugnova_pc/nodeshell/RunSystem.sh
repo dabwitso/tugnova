@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 BASE_DIR=/home/nvidia/Autoware
 export $(cat ${BASE_DIR}/param/RunSystem.env | grep -v '^#' | xargs)
 
@@ -17,7 +18,7 @@ cd ${ROS_DIR}
 source /opt/ros/kinetic/setup.bash
 source ${ROS_DIR}/devel/setup.bash
 
-${SHELL_DIR}/ExitAutoware.sh
+#${SHELL_DIR}/ExitAutoware.sh
 
 logger RunSystem.sh start
 
@@ -56,7 +57,7 @@ fi
 #cp -p ${ZIP_DIR}/*${ROUTE_FILE} ${BASE_DIR}/route/route.csv
 # load kamigo routes from git folder
 
-gnome-terminal --command ${SHELL_DIR}/load_kamigo_routes.sh
+gnome-terminal --command ${SHELL_DIR}/load_routes.sh
 
 cp -p ${ZIP_DIR_TOP}/DICTIONARY/DICTIONARY ${API_DIR}/DICTIONARY
 
@@ -179,7 +180,7 @@ sleep 5
 # Ctlcarsystem
 gnome-terminal --command "${SHELL_DIR}/15ctlreduce.sh `python ${SHELL_DIR}/load_yaml.py ${CUSTOM_YAML} ctlreduce`"
 gnome-terminal --command ${SHELL_DIR}/15changeobstaclearea.sh
-#gnome-terminal --command ${SHELL_DIR}/15update_map_route.sh
+gnome-terminal --command ${SHELL_DIR}/15update_map_route.sh
 gnome-terminal --command ${SHELL_DIR}/15ctlvehicle.sh
 sleep 5
 gnome-terminal --command ${SHELL_DIR}/15checktlr.sh
@@ -191,7 +192,7 @@ gnome-terminal --command "roslaunch drive_mode_controller drive_controller.launc
 gnome-terminal --command "roslaunch drive_stop_controller drive_stop_controller.launch"
 sleep 3
 gnome-terminal --command "roslaunch checksrv_checker checksrv_checker.launch"
-#gnome-terminal --command ${SHELL_DIR}/15check_change_route.sh
+gnome-terminal --command ${SHELL_DIR}/15check_change_route.sh
 ${SHELL_DIR}/15change_config_waypoint_follower.sh            > /dev/null 2>&1 &
 
 gnome-terminal --command ${SHELL_DIR}/16generatevehicletwist.sh
@@ -221,25 +222,16 @@ gnome-terminal --command ${SHELL_DIR}/battery_threshold.sh
 gnome-terminal --command "roslaunch battery_meter battery_meter.launch"
 sleep 3
 gnome-terminal --command "roslaunch shutter shutter.launch"
-gnome-terminal --command "roslaunch object_detection_listener object_detection_listener.launch"
+gnome-terminal --command "roslaunch livox_detector livox_detector.launch"
+gnome-terminal --command "roslaunch object_detection_checker object_detection_checker.launch"
 gnome-terminal --command "roslaunch traffic_lights traffic_lights.launch"
-
-# sleep 5
-# gnome-terminal --command ${SHELL_DIR}/RunMABXDriver.sh
-
-### Simulation
-### 注意!! 下記のコメントを外しただけでは車両は発進しません。以下を試してください。
-###       1. ~/Autoware/param/device.lstを全て127.0.0.1に指定すること
-###       2. ~/Autoware/param/monitoring_health_auto_drive.yamlに記載する監視対象ノードを/base_link_to_localizer以外全て消す事
-# roslaunch waypoint_follower wf_simulator.launch initialize_source:=Rviz > /dev/null 2>&1 &
-# roslaunch autoware_connector vel_pose_connect.launch sim_mode:=True > /dev/null 2>&1 &
-# rosrun simulation_coms simulation_coms > /dev/null 2>&1 &
-### 自動運転SW
-# rostopic pub /plc_autodrive std_msgs/Int16 "data: 1" > /dev/null 2>&1 &
-### 運転準備ボタン
-# rostopic pub /plc_readydrive std_msgs/Int16 "data: 1" > /dev/null 2>&1 &
-### 機台車両ボタン
-# rostopic pub /GpioStartFlg std_msgs/Int16 "data: 1" > /dev/null 2>&1 &
+gnome-terminal --command "roslaunch csv_read_refresh refresh_clock.launch"
+gnome-terminal --command "roslaunch hotspot_trigger hotspot_trigger.launch"
+gnome-terminal --command "roslaunch autoware_status autoware_status.launch"
+gnome-terminal --command "roslaunch lamp_checker lamp_checker.launch"
+gnome-terminal --command "roslaunch conveyor_cargo conveyor_cargo_checker.launch"
+gnome-terminal --command "roslaunch monitor_ndt_stats ndt_stat_health.launch"
+gnome-terminal --command "roslaunch pcd2int pcd2int.launch"
 
 gnome-terminal --command ${SHELL_DIR}/17ctl_led.sh
 ${SHELL_DIR}/emergency_stop.sh            > /dev/null 2>&1 &
@@ -265,6 +257,7 @@ xdotool windowsize $(xdotool search --onlyvisible --name firefox) 100% 100%
 sleep 2
 xdotool windowactivate $(xdotool search --onlyvisible --name firefox)
 sleep 2
+gnome-terminal --command "roslaunch livox_health_checker health_checker.launch"
 
 
 logger RunSystem.sh end

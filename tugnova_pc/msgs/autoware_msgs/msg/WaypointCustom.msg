@@ -107,6 +107,9 @@ uint8 shutter_passed
 uint8 traffic_light_flg
 
 ############
+uint8 lamp_id
+
+############
 uint8 object_detection_intersect
 
 ############# cross_point_detection_area_left -> cross_point_detection_area_left
@@ -132,3 +135,6 @@ uint8 battery_exchange
 
 ############# battery_exchange_threshold -> battery_exchange_threshold
 uint8 battery_exchange_threshold
+
+############# vehicle_waypoint_distance -> vehicle_waypoint_distance
+float32 vehicle_waypoint_distance

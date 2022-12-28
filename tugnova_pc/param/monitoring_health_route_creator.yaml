@@ -1,0 +1,27 @@
+post:
+   url : http://localhost:8080/v/status
+   timeout : 1
+   max_times : 3
+   waittime : 3.0
+   mode: route-creation
+nodecheck:
+   timer: 5
+   count: 3
+   node_name:
+      - /base_link_to_localizer
+      - /lost_localization
+      - /ndt_matching
+      - /ndt_matching_monitor
+      - /points_map_loader
+      - /pose_relay
+      - /rosout
+      - /vel_relay
+      - /voxel_grid_filter
+      - /waypoint_saver
+      - /waypoint_editor
+      - /world_to_map
+      - /os_cloud_node
+      - /os_node
+      - /check_plc
+      - /ping_node_checker
+      - /monitoring_notification

@@ -1,0 +1,17 @@
+Setup almost completed! Just a few more steps
+
+Do the following additional steps to ensure working system:
+Note: '#' represents comments not commands
+
+1.  cd /home/nvidia/gitlab/params
+
+2.  # set the lidar_id in device.lst and custom.yaml files
+
+3.  cd /home/nvidia/Autoware/ros/nodeshell
+
+4.  ./set_lidar_params.sh
+
+5.  # configure network setting to ensure set to manual dhcp, ethernet 192.168.0.37
+"
+
+Happy Autonomous Driving !!!

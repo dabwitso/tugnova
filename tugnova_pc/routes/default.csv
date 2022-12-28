@@ -1,0 +1,8 @@
+waypoint_id,x,y,z,yaw,velocity,change_flag,change_flag,steering_flag,accel_flag,stop_flag,event_flag,traffic_light_detection,target_traffic_light_camera,start,goal,stop_point,detection_range_front_l,detection_range_front_r,detection_range_rear_l,detection_range_rear_r,fatal_area_left,fatal_area_right,cargo_left,cargo_right,obstacle_detection_distance_change,winker_point,obstacle_sensor_range,mode_change,attention_broadcast,inter_vehicular_distance,minimum_target_point_distance,target_point_ratio,voxel_leaf_size,local_max_slope,preliminary_output,route_change,pause_point,pause_time,cross_point,cross_point_detection_area_left,cross_point_detection_area_right,cross_point_detection_area_front,cross_point_detection_area_back
+0,-2.4996,0.2776,-0.2498,-0.048,2,0,0,0,0,0,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0
+1,-1.5008,0.2296,-0.2446,-0.048,2,0,0,0,0,0,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0
+2,-0.5019,0.1817,-0.2393,-0.048,2,0,0,0,0,0,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0
+3,0.4969,0.1337,-0.2341,-0.048,2,0,0,0,0,0,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0
+4,1.4957,0.0858,-0.2288,-0.048,2,0,0,0,0,0,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0
+5,2.4946,0.0378,-0.2236,-0.048,2,0,0,0,0,0,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0
+6,3.0054,0.0133,-0.2209,-0.048,2,0,0,0,0,0,0,0,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0

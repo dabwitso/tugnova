@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   communication_msgs
+  gps_common
 )
 
 

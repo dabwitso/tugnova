@@ -14,6 +14,7 @@ Traffic_Lights::Traffic_Lights()
   // variable initialization
   traffic_flg_publish_count = INIT;
   traffic_light_flg = INIT;
+  TRAFFIC_LIGHT_STOP_FLAG = {1, 3, 5};
 }
 
 void Traffic_Lights::trafficLightCallback(const autoware_msgs::Lane& msg)
@@ -24,8 +25,8 @@ void Traffic_Lights::trafficLightCallback(const autoware_msgs::Lane& msg)
     traffic_flg_publish_count = OFF;
   else {
     if (traffic_flg_publish_count == INIT) {
-      ROS_INFO("traffic light flag: %d   traffic_flg_publish_count: %d", trl_flag, traffi c_flg_publish_count);
-      if (*(std::find(TRAFFIC_LIGHT_STOP_FLAG.begin(), TRAFFIC_LIGHT_STOP_FLAG.end(), trl _flag)) == trl_flag) {
+      ROS_INFO("traffic light flag: %d   traffic_flg_publish_count: %d", trl_flag, traffic_flg_publish_count);
+      if (*(std::find(TRAFFIC_LIGHT_STOP_FLAG.begin(), TRAFFIC_LIGHT_STOP_FLAG.end(), trl_flag)) == trl_flag) {
         // stop drive if at traffic light stop point
         ROS_INFO("Stopping tagnova...");
         std_msgs::Int16 stop_cmd;
@@ -34,7 +35,7 @@ void Traffic_Lights::trafficLightCallback(const autoware_msgs::Lane& msg)
       }
       std_msgs::Int16 traffic_msg;
       traffic_msg.data = trl_flag;
-      traffic_light_flg_pub.publish(trl_flag);
+      traffic_light_flg_pub.publish(traffic_msg);
       ++traffic_flg_publish_count;
     }
   }

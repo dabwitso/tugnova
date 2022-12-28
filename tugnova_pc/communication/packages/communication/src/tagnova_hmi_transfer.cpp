@@ -8,21 +8,21 @@ HmiConnect::HmiConnect()
   waitpoint_pub = nh.advertise<std_msgs::Bool>("waitpoint_state", 10);
   stats_pub = nh.advertise<communication_msgs::Stats>("tagnova_stats", 10);
   marionet_pub = nh.advertise<communication_msgs::MarionetteMessage>("marionette_status", 1);
+  drive_mode_pub = nh.advertise<std_msgs::Int16>("tugnova_drive_mode", 10);
   //stop_flg_pub = nh.advertise<std_msgs::Int16>("detection_stop_point", 10);
-  //traffic_light_flg_pub = nh.advertise<std_msgs::Int16>("traffic_light_flg", 1);
 
   // subscriptions
-  sub_pose = nh.subscribe("current_pose", 1, &HmiConnect::poseCallback, this);
-  sub_vstatus = nh.subscribe("vehicle_status", 1, &HmiConnect::vehicleStatusCallback, this);
-  sub_vlocation = nh.subscribe("vehicle_location", 1, &HmiConnect::locationCallback, this);
-  sub_plc = nh.subscribe("plc_sensor_packet", 10, &HmiConnect::plcSensorCallback, this);
+  pose_sub = nh.subscribe("current_pose", 1, &HmiConnect::poseCallback, this);
+  vehicle_status_sub = nh.subscribe("vehicle_status", 1, &HmiConnect::vehicleStatusCallback, this);
+  location_sub = nh.subscribe("vehicle_location", 1, &HmiConnect::locationCallback, this);
+  plc_sensor_sub = nh.subscribe("plc_sensor_packet", 10, &HmiConnect::plcSensorCallback, this);
 
-  sub_battery = nh.subscribe("battery_status", 10, &HmiConnect::batteryHealthCallback, this);
+  battery_status_sub = nh.subscribe("battery_status", 10, &HmiConnect::batteryHealthCallback, this);
 
-  sub_battery_meter_p = nh.subscribe("battery_percentage", 10, &HmiConnect::batteryPercentCallback, this);
+  battery_percent_sub = nh.subscribe("battery_percentage", 10, &HmiConnect::batteryPercentCallback, this);
 
-  sub_waitpoint = nh.subscribe("safety_waypoints", 1, &HmiConnect::waitpointCallback, this);
-  sub_waitpoint_clear = nh.subscribe("waitpoint_clear", 10, &HmiConnect::waitpointClearCallback, this);
+  waitpoint_sub = nh.subscribe("safety_waypoints", 1, &HmiConnect::waitpointCallback, this);
+  waitpoint_clear_sub = nh.subscribe("waitpoint_clear", 10, &HmiConnect::waitpointClearCallback, this);
   //sub_traffic_light_flg = nh.subscribe("safety_waypoints", 10, &HmiConnect::trafficLightCallback, this);
   vehicle_twist_sub = nh.subscribe("out_twist_cmd", 10, &HmiConnect::twistCallback, this);
 
@@ -32,6 +32,7 @@ HmiConnect::HmiConnect()
   waypoint_id = INIT;
   waitpoint_flg = INIT;
   battery_health_id = INIT;
+  drive_mode_pub_count = INIT;
   //traffic_flg_publish_count = INIT;
 
   x_position = DINIT;
@@ -41,6 +42,24 @@ HmiConnect::HmiConnect()
   battery_percentage = DINIT;
 
   isVehicleIdle = true;
+
+  battery_health = {
+    {0, "normal"},
+    {1, "warning"},
+    {2, "error"},
+    {3, "fatal"},
+  };
+}
+
+void HmiConnect::driveModePublish(int data){
+  if(drive_mode_pub_count > DRIVE_MODE_PUBLISH_CYCLE){
+    std_msgs::Int16 msg;
+    msg.data = data;
+    drive_mode_pub.publish(msg);
+    // reset flag
+    drive_mode_pub_count = INIT;
+  }
+  ++drive_mode_pub_count;
 }
 
 void HmiConnect::publishStats()
@@ -52,7 +71,7 @@ void HmiConnect::publishStats()
   msg.position.z = z_position;
   msg.speed = speed;
   msg.plc_error = plc_error;
-  msg.battery_info = BATTERY_HEALTH[battery_health_id];
+  msg.battery_info = battery_health[battery_health_id];
   msg.battery_status = battery_percentage;
   stats_pub.publish(msg);
 
@@ -65,6 +84,7 @@ void HmiConnect::publishStats()
 void HmiConnect::plcSensorCallback(const udp_msgs::UdpSensorPacket& msg)
 {
   plc_error = msg.BrakePotVol;
+  driveModePublish(msg.ECUMode);
 }
 
 void HmiConnect::twistCallback(const geometry_msgs::TwistStamped& msg)

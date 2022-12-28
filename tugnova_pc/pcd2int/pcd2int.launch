@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="pcd2int" type="pcd2int" name="pcd2int" output="screen"/>
+
+</launch>

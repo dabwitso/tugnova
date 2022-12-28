@@ -1,0 +1,6 @@
+vehicle_info:
+  wheel_base: 1.36
+  minimum_turning_radius: 1.775
+  maximum_steering_angle: 65.0
+  tire_radius: 0.2
+  tire_distance: 0.805

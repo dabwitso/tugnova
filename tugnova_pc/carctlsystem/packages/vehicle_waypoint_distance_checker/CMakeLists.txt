@@ -4,7 +4,24 @@ project(vehicle_waypoint_distance_checker)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  autoware_msgs
   carctl_msgs
+  geometry_msgs
+  message_generation
+)
+
+## debug ##
+## Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+  PoseStruct.msg
+  Custom.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  geometry_msgs
 )
 
 catkin_package(

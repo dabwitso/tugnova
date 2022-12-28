@@ -34,8 +34,8 @@ class HmiConnect {
   ros::Publisher stats_pub;
   ros::Publisher waitpoint_pub;
   ros::Publisher marionet_pub;
-  ros::Publisher stop_flg_pub;
-  //ros::Publisher traffic_light_flg_pub;
+  ros::Publisher drive_mode_pub;
+  //ros::Publisher stop_flg_pub;
 
   ros::Subscriber pose_sub;
   ros::Subscriber vehicle_status_sub;
@@ -45,15 +45,13 @@ class HmiConnect {
   ros::Subscriber battery_percent_sub;
   ros::Subscriber waitpoint_sub;
   ros::Subscriber waitpoint_clear_sub;
-  //ros::Subscriber traffic_light_sub;
   ros::Subscriber vehicle_twist_sub;
 
-  //int traffic_light_flg;
   int plc_error;
   int waypoint_id;
   int waitpoint_flg;
   int battery_health_id;
-  //int traffic_flg_publish_count;
+  int drive_mode_pub_count;
 
   double x_position;
   double y_position;
@@ -66,27 +64,23 @@ class HmiConnect {
   static const int16_t INIT = 0;
   static const int16_t NOW = 0;
 
-  static const int16_t PUBLISH_RATE = 10;
+
+  // publish once every 1500 Hz => every 30 secs
+  static const int DRIVE_MODE_PUBLISH_CYCLE = 50;
 
   const double DINIT = 0.0;
   const double ZERO_SPEED = 0.0;
+  const double PUBLISH_RATE = 0.5;
 
   // used to update battery percentage only when vehicle is idle
   bool isVehicleIdle;
 
-  // TRAFFIC_LIGHT_STOP_FLAG are the first value of a pair of flags assigned to a traffic light area
-  // example traffic light zone pairs: (1,2),(3,4),(5,6)
-  const std::array<int, 3> TRAFFIC_LIGHT_STOP_FLAG = { 1, 3, 5 };
 
-  const std::map<int, std::string> BATTERY_HEALTH = {
-    { 0, "normal" },
-    { 1, "warning" },
-    { 2, "error" },
-    { 3, "fatal" },
-  };
+  std::map<int, std::string> battery_health;
 
   // misc functions
   void publishStats();
+  void driveModePublish(int data);
 
   // callback functions
   void plcSensorCallback(const udp_msgs::UdpSensorPacket& msg);
@@ -96,7 +90,6 @@ class HmiConnect {
   void locationCallback(const autoware_msgs::VehicleLocationConstPtr& msg);
   void waitpointClearCallback(const std_msgs::String& msg);
   void waitpointCallback(const autoware_msgs::Lane& msg);
-  //void trafficLightCallback(const autoware_msgs::Lane& msg);
   void batteryHealthCallback(const carctl_msgs::battery_status& msg);
   void twistCallback(const geometry_msgs::TwistStamped& msg);
 };

@@ -1,0 +1,3 @@
+<launch>
+<node pkg="livox_health_checker" name="livox_checker" type="livox_checker" output="screen"/>
+</launch>

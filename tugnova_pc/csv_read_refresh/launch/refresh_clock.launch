@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="csv_read_refresh" name="csv_refresh_clock" type="csv_refresh_clock" output="screen"/>
+</launch>

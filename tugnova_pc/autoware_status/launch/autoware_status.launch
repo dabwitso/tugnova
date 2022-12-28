@@ -1,0 +1,3 @@
+<launch>
+<node pkg="autoware_status" name="status_code" type="status_code" output="screen"/>
+</launch>

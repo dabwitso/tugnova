@@ -2,4 +2,9 @@
   <node pkg="communication" type="server.py" name="hmi_server" output="log" respawn="true"/>
   <node pkg="bluetooth" type="client.py" name="bluetooth_client" output="log" respawn="true"/>
   <node pkg="marionet" type="publisher.py" name="marionet_client" output="log" respawn="true"/>
+  <node pkg="gpsd_client" type="gpsd_client" name="gpsd_client" output="log" respawn="true"/>
+  <node pkg="gnss_receiver" type="gpsd_ros_node.py" name="gpsd_ros_node" output="log" respawn="true"/>
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
+     <arg name="port" value="9090" />
+  </include>
 </launch>
